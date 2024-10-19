@@ -3,7 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 
 app = Flask(__name__)
+
+"""   USAR para la version definitiva
+
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
+
+"""
+#SOLO para probar
+port = 5000
+app.config['SQLALCHEMY_DATABASE_URI']= 'postgresql+psycopg2://postgres:4520@localhost:5432/p3-test'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+
 db = SQLAlchemy(app)
 
 class Directory(db.Model):
@@ -19,8 +29,6 @@ class Directory(db.Model):
             'emails': self.emails
         }
     
-    db.create_all()
-
 @app.route('/status', methods=['GET'])
 def status():
     return jsonify({'response': 'pong'})
@@ -28,4 +36,6 @@ def status():
 
 
 if __name__ == '__main__':
-    app.run()
+    with app.app_context():
+        db.create_all()
+    app.run(host='0.0.0.0', debug=True, port=port)
