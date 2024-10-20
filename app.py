@@ -108,6 +108,18 @@ def partial_update_directory(directory_id):
     except Exception as e:
         return make_response(jsonify({'message': e}), 500)    
     
+# Eliminar un directorio
+
+@app.route('/directories/<int:directory_id>', methods=['DELETE'])
+def delete_directory(directory_id):
+    try:
+        directory = Directory.query.get_or_404(directory_id)
+        db.session.delete(directory)
+        db.session.commit()
+        return make_response(jsonify({'message': 'directorio eliminado'}), 200)
+    except Exception as e:
+        return make_response(jsonify({'message': e}), 500)    
+    
 
 if __name__ == '__main__':
     with app.app_context():
