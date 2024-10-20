@@ -75,6 +75,26 @@ Actualizar parcialmente un directorio y Eliminar un directorio
 
 """
 
+#Obtener un directorio
+@app.route('/directories/<int:directory_id>', methods=['GET'])
+def get_directory(directory_id):
+    directory = Directory.query.get_or_404(directory_id)
+    return jsonify(directory.json())
+
+# Actualizar un directorio
+@app.route('/directories/<int:directory_id>', methods=['PUT'])
+def update_directory(directory_id):
+    try:
+        directory = Directory.query.get_or_404(directory_id)
+        data = request.get_json()
+        directory.name = data['name']
+        directory.emails = data['emails']
+        db.session.commit()
+        return jsonify(directory.json())
+    except Exception as e:
+        return make_response(jsonify({'message': e}), 500)
+    
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
