@@ -81,6 +81,7 @@ def get_directory(directory_id):
     directory = Directory.query.get_or_404(directory_id)
     return jsonify(directory.json())
 
+
 # Actualizar un directorio
 @app.route('/directories/<int:directory_id>', methods=['PUT'])
 def update_directory(directory_id):
@@ -93,6 +94,19 @@ def update_directory(directory_id):
         return jsonify(directory.json())
     except Exception as e:
         return make_response(jsonify({'message': e}), 500)
+    
+#Actualizar parcialmente un directorio
+@app.route('/directories/<int:directory_id>', methods=['PATCH'])
+def partial_update_directory(directory_id):
+    try:
+        directory = Directory.query.get_or_404(directory_id)
+        data = request.get_json()
+        for key, value in data.items():
+            setattr(directory, key, value)
+            db.session.commit()
+            return jsonify(directory.json())
+    except Exception as e:
+        return make_response(jsonify({'message': e}), 500)    
     
 
 if __name__ == '__main__':
