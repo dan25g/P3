@@ -8,7 +8,7 @@ Este documento proporciona una guía paso a paso para arrancar y ejecutar la pr�
 
 # Requisitos Previos
 
-Se deben tener instalados los siguientes programas:
+## Se deben tener instalados los siguientes programas:
 
 1. Docker - se puede descargar e instalar desde aquí: https://www.docker.com/get-started/
 
@@ -16,9 +16,9 @@ Se deben tener instalados los siguientes programas:
 
 Se debe clonar el repositorio directamente desde la rama main
 
-#Construir y Ejecutar el Proyecto con Docker Compose
+# Construir y Ejecutar el Proyecto con Docker Compose
 
-#Integrantes
+# Integrantes
 Ascanio Paola
 García Daniel
 
