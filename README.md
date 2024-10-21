@@ -14,4 +14,5 @@ Se deben tener instalados los siguientes programas:
 
 2.  Docker compose - Normalmente viene incluído con la instalación de Docker 
 
+Se debe clonar el repositorio directamente desde la rama main
 
