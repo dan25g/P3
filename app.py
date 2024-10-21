@@ -69,12 +69,6 @@ def create_directory():
         return make_response(jsonify({'message': e}), 500)
     
 
-"""
-falta Obtener un directorio, Actualizar un directorio, 
-Actualizar parcialmente un directorio y Eliminar un directorio
-
-"""
-
 #Obtener un directorio
 @app.route('/directories/<int:directory_id>', methods=['GET'])
 def get_directory(directory_id):
