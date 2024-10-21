@@ -4,15 +4,9 @@ from os import environ
 
 app = Flask(__name__)
 
-"""   USAR para la version definitiva
 
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
 
-"""
-#SOLO para probar
-port = 5000
-app.config['SQLALCHEMY_DATABASE_URI']= 'postgresql+psycopg2://postgres:4520@localhost:5432/p3-test'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 
 db = SQLAlchemy(app)
 
@@ -28,6 +22,7 @@ class Directory(db.Model):
             'name': self.name,
             'emails': self.emails
         }
+db.create_all()
 
 #Responde simplemente pong
 @app.route('/status', methods=['GET'])
@@ -38,7 +33,7 @@ def status():
 @app.route('/directories', methods=['GET'])
 def get_directories():
     page = request.args.get('page', 1, type=int)
-    per_page = 1
+    per_page = 5
     directories = Directory.query.paginate(page=page, per_page=per_page, error_out=False)
     base_url = request.base_url
     data = {
@@ -114,8 +109,3 @@ def delete_directory(directory_id):
     except Exception as e:
         return make_response(jsonify({'message': e}), 500)    
     
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(host='0.0.0.0', debug=True, port=port)
