@@ -38,7 +38,11 @@ Una vez que los contenedores estén en funcionamiento, se puede probar la aplica
 
 http://localhost:4000
 
-# Integrantes
-Ascanio Paola
-García Daniel
+La base de datos estará disponible en puerto http://localhost:5433
+
+# Integrantes 
+
+## Ascanio Paola
+
+## García Daniel
 
