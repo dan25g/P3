@@ -109,3 +109,5 @@ def delete_directory(directory_id):
     except Exception as e:
         return make_response(jsonify({'message': e}), 500)    
     
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=4000)

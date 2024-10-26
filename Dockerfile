@@ -4,10 +4,12 @@ WORKDIR /app
 
 COPY requirements.txt ./
 
+COPY .env ./
+
 RUN pip install -r requirements.txt
 
 COPY  . .
 
 EXPOSE 4000
 
-CMD ["flask", "run", "--host=0.0.0.0", "--port=4000"]
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:4000", "-w", "4"]
