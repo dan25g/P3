@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
+from email_validator import validate_email, EmailNotValidError
+
 
 app = Flask(__name__)
 
@@ -22,6 +24,17 @@ class Directory(db.Model):
             'name': self.name,
             'emails': self.emails
         }
+
+    @staticmethod
+    def validate_emails(email_list):
+        for email in email_list:
+            try:
+                # Validar el email
+                validate_email(email)
+            except EmailNotValidError as e:
+                # Retornar el mensaje de error si el email no es válido
+                return str(e)
+        return None
 db.create_all()
 
 #Responde simplemente pong
@@ -35,6 +48,8 @@ def get_directories():
     page = request.args.get('page', 1, type=int)
     per_page = 5
     directories = Directory.query.paginate(page=page, per_page=per_page, error_out=False)
+    if not directories.items:
+        return jsonify({'message': 'No directories found'}), 404
     base_url = request.base_url
     data = {
         'count': directories.total,
@@ -56,6 +71,12 @@ def get_directories():
 def create_directory():
     try:
         data = request.get_json()
+
+        # Validar los correos electrónicos
+        validation_error = Directory.validate_emails(data['emails'])
+        if validation_error:
+            return make_response(jsonify({'message': validation_error}), 400)
+        
         new_directory = Directory(name=data['name'], emails=data['emails'])
         db.session.add(new_directory)
         db.session.commit()
