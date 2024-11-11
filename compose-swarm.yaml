@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  flask_app:
+    image: paoascanio/p3:latest   # Usando la imagen de Docker Hub
+    container_name: flask_app
+    ports:
+      - "4000:4000"
+    environment:
+      - DB_URL=postgresql://${DB_USER}:${DB_PASSWORD}@flask_db:5432/${DB_NAME}
+    depends_on:
+      - flask_db
+    networks:
+      - flask_network
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 100M
+
+  flask_db:
+    image: postgres:15
+    container_name: flask_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    networks:
+      - flask_network
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 100M
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  flask_network:
+    driver: overlay
